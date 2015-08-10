@@ -1,0 +1,38 @@
+{
+  "name": "ngAwsS3",
+  "version": "0.0.1",
+  "homepage": "https://github.com/jhairau/ngAwsS3",
+  "authors": [
+    "Johnathan Hair <johnathan.hair.au@gmail.com>"
+  ],
+  "description": "Angular + AWS S3. Uses AWS JS SDK for listing, reading, uploading and removing objects",
+  "main": "dist/ngAwsS3.js",
+  "keywords": [
+    "angular",
+    "amazon",
+    "aws",
+    "s3",
+    "javascript"
+  ],
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+      "angular": ">=1.2.1",
+      "cryptojslib": "~3.1.2"
+  },
+  "ignore": [
+    "src",
+    "spec",
+    ".bowerrc",
+    ".gitignore",
+    ".jshintignore",
+    ".jshintrc",
+    "bower.json",
+    "gruntfile.js",
+    "package.json",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

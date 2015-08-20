@@ -1,5 +1,5 @@
-# ngAwsS3
-Angular + AWS S3. Uses AWS JS SDK for listing, reading, uploading and removing objects
+# ngAws
+Angular + AWS. Lambda and S3 currently implemented.
 
 This project generates and uses S3 Access Policies to allow for HTTP POST and GET requests, making it easier to work
 with html5 file upload applications

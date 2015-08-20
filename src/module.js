@@ -1,91 +1,104 @@
-angular.module('ngAwsS3', [])
-    .provider('ngAwsS3Config', function ngAwsS3ConfigProvider() {
+angular.module('ngAws', [])
+    .provider('ngAwsConfig', function ngAwsConfigProvider() {
 
-        // The base configuration
-        var baseConfig = {
+        // Base configuration
+        this.config = {};
 
-            aws_key: null,
-            aws_secret: null,
-            aws_region: null,
-            s3_bucket: null
+        // Merge in base options
+        angular.extend(this, {
+
+            // AWS Credentials
+            credentials: {
+                access_key: null,
+                secret_key: null,
+                session_token: null
+            },
+
+            // AWS region to default
+            region: 'us-east-1',
+
+            // AWS S3 bucket to default
+            s3: {
+                bucket: null
+            }
+        });
 
 
-            templatePath: 'templates/bootstrap3'
-        };
-
-
-        /**
-         * Set the entire config by merging objects
-         * @param {[type]} object [description]
-         */
-        this.setConfig = function(object) {
-            angular.extend(baseConfig, object);
-        };
-
-
-        /**
-         * Get the entire config object
-         * @return {[type]} [description]
-         */
-        this.getConfig = function() {
-            return baseConfig;
-        };
+        var awsCredentials = new AWS.Credentials();
 
 
         /**
-         * Get a single config value based on key
-         * @return {[type]} [description]
+         * Set the AWS credentials
+         * @param {string} access_key The AWS access key
+         * @param {string} secret_key The AWS secret key
+         * @params {string} session_token Unused
          */
-        this.getConfigValue = function(key) {
-            return baseConfig[key];
+        this.setCredentials = function (access_key, secret_key, session_token) {
+            this.config.credentials.access_key = access_key;
+            this.config.credentials.secret_key = secret_key;
+            this.config.credentials.session_token = session_token | null;
+
+            //awsCredentials = new A
         };
 
 
-        /**
-         * The required $get method
-         * @return {[type]} [description]
-         */
-        this.$get = function() {
+        this.getAwsCredentials = function () {
+            return new AWS.Credentials({
+                accessKeyId: this.config.credentials.access_key,
+                secretAccessKey: this.config.credentials.secret_key,
+                sessionToken: this.config.credentials.session_token
+            });
+        };
 
-            return {
-                get: this.getConfigValue
+        this.getService = function (name, options) {
+
+            // Base config for the service
+            var config = {
+                credentials: ngAwsConfig.getAwsCredentials()
             };
 
+            // Merge in the user options
+            angular.extend(config, options);
+
+            return new AWS[name](config);
+        };
+
+        /**
+         * Set the AWS Region to work with
+         * @param {string} [region=us-east-1] Region code to work with
+         */
+        this.setRegion = function (region) {
+            this.config.region = region;
+        };
+
+
+        /**
+         * Set the AWS bucket in S3 to work out of
+         * @param {string} bucket Name of the bucket to work out of
+         */
+        this.setBucket = function (bucket) {
+            this.config.bucket = bucket;
+        };
+
+
+        /**
+         * Required provider method for use in .config section of your app
+         * @returns {{config: *}}
+         */
+        this.$get = function () {
+            return {
+                // Return the configuration
+                config: this.config
+            };
+        };
+
+
+        // Hardcode the apiVersions that we are going to be using
+        AWS.config.apiVersions = {
+            lambda: '2015-03-31',
+            s3: '2006-03-01'
         };
 
         return this;
     })
-    .run(['$rootScope', '$state', 'ngAwsS3Config',
-        function($rootScope, $state, ngAwsS3Config) {
-
-          // run if we are routing
-          if (ngAwsS3Config.get('routing')) {
-
-            // On login, redirect the user to
-            $rootScope.$on('ngAwsS3:login_success', function(event,authData) {
-              $rootScope.authData = authData;
-
-              if ($state.current.name == ngAwsS3Config.get('redirectPathLoggedOut')) {
-                event.preventDefault();
-                $state.go(ngAwsS3Config.get('redirectPathLoggedIn'));
-              }
-            });
-
-
-            // Listen to routing errors
-            $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, err) {
-
-              // Auth error
-              if (err == 'AUTH_REQUIRED') {
-
-                // Stop any other routing actions from running
-                event.preventDefault();
-
-                // route the user to the login page
-                $state.go(ngAwsS3Config.get('redirectPathLoggedOut'));
-              }
-
-            });
-          }
-        }
-    ]);
+;

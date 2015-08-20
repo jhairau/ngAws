@@ -1,17 +1,18 @@
 {
-  "name": "ngAwsS3",
+  "name": "ngAws",
   "version": "0.0.1",
-  "homepage": "https://github.com/jhairau/ngAwsS3",
+  "homepage": "https://github.com/jhairau/ngAws",
   "authors": [
     "Johnathan Hair <johnathan.hair.au@gmail.com>"
   ],
-  "description": "Angular + AWS S3. Uses AWS JS SDK for listing, reading, uploading and removing objects",
-  "main": "dist/ngAwsS3.js",
+  "description": "Angular + AWS. Lambda and S3 currently implemented.",
+  "main": "dist/ngAws.js",
   "keywords": [
     "angular",
     "amazon",
     "aws",
     "s3",
+    "lambda",
     "javascript"
   ],
   "license": "MIT",
